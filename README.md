@@ -85,6 +85,7 @@ On your Ansible Host machine you may need to add/edit the `ansible.cfg` file
 
 For me this was located in the `~/.ansible.cfg` and I added/changed:
 ```
+[defaults]
 host_key_checking = False
 interpreter_python=auto_silent
 ```
@@ -92,7 +93,7 @@ The first allows ssh connections without the host being in the known host file a
 
 Add your Raspberry Pi IP address to the pi host group
 ```
-echo "192.168.1.41" >> hosts
+echo "192.168.1.xyz" >> hosts
 ```
 
 Add your public key to the authorized_keys files
