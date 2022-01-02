@@ -57,6 +57,13 @@ The following software packages have to be installed on your local machine and t
 * Python 2.6 or later
   * [Python BeginnersGuide](https://wiki.python.org/moin/BeginnersGuide/Download)
 
+* Enable ssh
+  * from the console using sudo raspi-config
+  * after the image has been created, mount the boot partition and create a file named "ssh" in it
+```
+# If the boot partition has been mounted at /media/jane/boot
+touch /media/jane/boot/ssh
+```
 
 ## Deployment
 
@@ -76,7 +83,7 @@ cd Ansible-Pi-Hole-Set-Up/
 
 On your Ansible Host machine you may need to add/edit the `ansible.cfg` file
 
-For me this was located in the `/etc/ansible/` folder and I added/changed:
+For me this was located in the `~/.ansible.cfg` and I added/changed:
 ```
 host_key_checking = False
 interpreter_python=auto_silent
@@ -85,17 +92,25 @@ The first allows ssh connections without the host being in the known host file a
 
 Add your Raspberry Pi IP address to the pi host group
 ```
-echo "192.168.2.110" >> hosts
+echo "192.168.1.41" >> hosts
 ```
 
 Add your public key to the authorized_keys files
 ```
-cat /.ssh/id_rsa.pub >> roles/security/files/authorized_keys
+cat ~/.ssh/id_rsa.pub >> roles/security/files/authorized_keys
 ```
 
 Edit the variables file to set e.g. the custom password for the pi user, the name of the alternative user etc.
 ```
 vim roles/security/vars/main.yaml
+```
+
+### How to clean up from previous runs
+
+Remove the remote ssh key
+
+```
+ssh-keygen -f "/home/wayne/.ssh/known_hosts" -R "192.168.1.41"
 ```
 
 ### How to run the Ansible playbook to secure your Raspberry Pi
@@ -121,6 +136,8 @@ ansible-playbook -i hosts playbook.yaml
 The base of this project comes from the work done below:
 
 [Tom Gelbling](https://www.linkedin.com/in/tomgelbling/) - *Project initiator*
+
+[timrwwatson](https://github.com/timrwwatson/Ansible-Pi-Hole-Set-Up) - *I forked his project*
 
 See also the list of [contributors](https://github.com/tomgelbling/Securing-your-Raspberry-Pi-with-Ansible/graphs/contributors) who participated in this project.
 
